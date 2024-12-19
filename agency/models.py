@@ -1,3 +1,4 @@
+from UniversalPressAgency import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -33,7 +34,7 @@ class Newspaper(models.Model):
         related_name="newspapers"
     )
     publishers = models.ManyToManyField(
-        Redactor,
+        settings.AUTH_USER_MODEL,
         related_name="newspapers"
     )
 
