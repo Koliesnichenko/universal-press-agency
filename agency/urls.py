@@ -14,7 +14,7 @@ urlpatterns = [
         name="topic-list",
     ),
     path(
-        "newpapers/",
+        "newspapers/",
         NewspaperListView.as_view(),
         name="newspaper-list",
     ),
