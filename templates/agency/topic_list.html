@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    Topic List
+  </h1>
+  
+  {% if topic_list %}
+    <table class="table">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+    </table>
+    
+  {% else %}
+    <p>There are no topics in the agency</p>
+  {% endif %}
+  
+{% endblock %}
