@@ -2,12 +2,15 @@ from django.urls import path
 
 from . import views
 from .views import (
+    index,
     TopicListView,
-    NewspaperListView, RedactorListView,
+    NewspaperListView,
+    RedactorListView,
+    RedactorDetailView,
 )
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", index, name="index"),
     path(
         "topics/",
         TopicListView.as_view(),
@@ -23,6 +26,11 @@ urlpatterns = [
         RedactorListView.as_view(),
         name="redactor-list",
     ),
+    path(
+        "redactor/<int:pk>/",
+        RedactorDetailView.as_view(),
+        name="redactor-detail",
+    )
 ]
 
 app_name = "agency"
