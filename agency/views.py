@@ -2,11 +2,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
 
-from django.views.generic import ListView
 
-from agency.forms import RedactorCreationForm
+from agency.forms import (
+    RedactorCreationForm,
+    RedactorYearsOfExperienceCreationForm,
+    TopicSearchForm,
+    NewspaperCreationForm, NewspaperUpdateForm,
+)
 from agency.models import Newspaper, Redactor, Topic
 
 
@@ -34,6 +39,38 @@ class TopicListView(LoginRequiredMixin, generic.ListView):
     template_name = "agency/topic_list.html"
     paginate_by = 5
 
+    def get_context_data(self,*, object_list=None, **kwargs):
+        context = super(TopicListView, self).get_context_data(**kwargs)
+        name = self.request.GET.get("name", "")
+        context["search_form"] = TopicSearchForm(
+            initial={"name": name}
+        )
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        name = self.request.GET.get("name", "")
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        return queryset
+
+
+class TopicCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Topic
+    fields = "__all__"
+    success_url = reverse_lazy("agency:topic-list")
+
+
+class TopicUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Topic
+    fields = "__all__"
+    success_url = reverse_lazy("agency:topic-list")
+
+
+class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Topic
+    success_url = reverse_lazy("agency:topic-list")
+
 
 class NewspaperListView(LoginRequiredMixin, generic.ListView):
     model = Newspaper
@@ -41,6 +78,23 @@ class NewspaperListView(LoginRequiredMixin, generic.ListView):
     template_name = "agency/newspaper_list.html"
     paginate_by = 5
     queryset = Newspaper.objects.select_related("topic")
+
+
+class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Newspaper
+    form_class = NewspaperCreationForm
+    success_url = reverse_lazy("agency:newspaper-list")
+
+
+class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Newspaper
+    form_class = NewspaperUpdateForm
+    success_url = reverse_lazy("agency:newspaper-list")
+
+
+class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Newspaper
+    success_url = reverse_lazy("agency:newspaper-list")
 
 
 class RedactorListView(LoginRequiredMixin, generic.ListView):
@@ -56,3 +110,15 @@ class RedactorDetailView(LoginRequiredMixin, generic.DetailView):
 class RedactorCreateView(LoginRequiredMixin, generic.CreateView):
     model = Redactor
     form_class = RedactorCreationForm
+    success_url = reverse_lazy("agency:redactor-list")
+
+
+class RedactorYearOfExperienceUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Redactor
+    form_class = RedactorYearsOfExperienceCreationForm
+    success_url = reverse_lazy("agency:redactor-list")
+
+
+class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Redactor
+    success_url = reverse_lazy("agency:redactor-list")
