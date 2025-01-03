@@ -3,10 +3,10 @@
 {% block content %}
   <h1>
   Username: {{ redactor.username }}
-    <a href="{% url 'agency:redactor-delete' pk=redactor.id %}" class="btn btn-secondary link-to-page">
+    <a href="{% url 'agency:redactor-delete' pk=redactor.id %}" class="btn btn-danger link-to-page" style="color: black">
       Delete
     </a>
-    <a href="{% url 'agency:redactor-update' pk=redactor.id %}" class="btn btn-secondary link-to-page">
+    <a href="{% url 'agency:redactor-update' pk=redactor.id %}" class="btn btn-secondary link-to-page" style="color: black">
       Update years of experience
     </a>
   </h1>
