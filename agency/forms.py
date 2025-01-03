@@ -43,7 +43,7 @@ class RedactorCreationForm(UserCreationForm):
         )
 
 
-class RedactorSearchForm(forms.ModelForm):
+class RedactorSearchForm(forms.Form):
     username = forms.CharField(
         max_length=255,
         required=False,
@@ -87,7 +87,7 @@ class NewspaperCreationForm(BaseNewspaperForm):
     pass
 
 
-class NewspaperSearchForm(forms.ModelForm):
+class NewspaperSearchForm(forms.Form):
     title = forms.CharField(
         max_length=255,
         required=False,
