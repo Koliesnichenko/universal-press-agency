@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 {% block content %}
   <h1>
@@ -7,6 +8,10 @@
       Create
     </a>
   </h1>
+  <form method="get" action="" class="form-inline">
+      {{ search_form|crispy }}
+      <input type="submit" class="btn btn-secondary" value="🔍">
+  </form>
   {% if redactor_list %}
     <table class="table">
     <tr>
@@ -19,7 +24,7 @@
     {% for redactor in redactor_list %}
       <tr>
         <td>{{ redactor.id }}</td>
-        <td><a href="{{ redactor.get_absolut_url }}">{{ redactor.username }} {% if user == redactor %} (Me){% endif %}</a></td>
+        <td><a href="{{ redactor.get_absolute_url }}">{{ redactor.username }} {% if user == redactor %} (Me){% endif %}</a></td>
         <td>{{ redactor.first_name }}</td>
         <td>{{ redactor.last_name }}</td>
         <td>{{ redactor.years_of_experience }}</td>
