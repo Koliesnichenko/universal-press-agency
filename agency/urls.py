@@ -16,6 +16,7 @@ from .views import (
     RedactorYearOfExperienceUpdateView,
     RedactorDeleteView,
     NewspaperDetailView,
+    toggle_assign_to_newspaper,
 )
 
 urlpatterns = [
@@ -64,6 +65,11 @@ urlpatterns = [
         "newspapers/<int:pk>/",
         NewspaperDetailView.as_view(),
         name="newspaper-detail",
+    ),
+    path(
+        "newspaper/<int:pk>/toggle-assign/",
+        toggle_assign_to_newspaper,
+        name="newspaper-toggle-assign",
     ),
     path(
         "redactors/",

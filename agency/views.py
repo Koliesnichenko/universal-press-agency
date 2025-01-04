@@ -165,10 +165,11 @@ class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
 @login_required
 def toggle_assign_to_newspaper(request, pk):
     redactor = Redactor.objects.get(id=request.user.id)
-    if (
-        Newspaper.objects.filter(id=pk) in redactor.newspapers.all()
-    ):
-        redactor.newspapers.remove(pk)
+    newspaper = Newspaper.objects.get(id=pk)
+
+    if newspaper in redactor.newspapers.all():
+        redactor.newspapers.remove(newspaper)
     else:
-        redactor.newspapers.remove(pk)
-    return HttpResponseRedirect(reverse_lazy("agency:newspaper-detail"))
+        redactor.newspapers.add(newspaper)
+
+    return HttpResponseRedirect(reverse_lazy("agency:newspaper-detail", kwargs={"pk": pk}))
