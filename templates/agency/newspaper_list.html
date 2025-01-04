@@ -29,7 +29,9 @@
            {{ newspaper.id }}
          </td>
           <td>
-            {{ newspaper.title }}
+            <a href="{% url 'agency:newspaper-detail' pk=newspaper.id %}">
+              {{ newspaper.title }}
+            </a>
           </td>
         <td>
           {{ newspaper.content }}

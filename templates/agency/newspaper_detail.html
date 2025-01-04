@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="display-4">
+    {{ newspaper.title }}
+    <a href="{% url 'agency:newspaper-update' pk=newspaper.id %}" class="btn btn-warning">Edit Newspaper</a>
+  </h1>
+  <p class="lead">{{ newspaper.content }}</p>
+  <p><strong>Topic:</strong> <span class="badge bg-info">{{ newspaper.topic.name }}</span></p>
+  <p class="text-muted"><strong>Published on:</strong>{{ newspaper.published_date }}</p>
+  
+  <h3>Publishers:</h3>
+  <ul class="list-group">
+    {% for redactor in newspaper.publishers.all %}
+      <li class="list-group-item-light">
+        <a href="{% url 'agency:redactor-detail' pk=redactor.id %}">
+          {{ redactor.username }}
+        </a>
+      </li>
+    {% empty %}
+      <p>No publishers assigned to this newspaper.</p>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'agency:newspaper-delete' pk=newspaper.id %}" class="btn btn-danger">Delete Newspaper</a>
+  <a href="{% url 'agency:newspaper-list' %}" class="btn btn-secondary">Back to List</a>
+{% endblock %}
