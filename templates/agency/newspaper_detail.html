@@ -5,8 +5,8 @@
     {{ newspaper.title }}
     <a href="{% url 'agency:newspaper-update' pk=newspaper.id %}" class="btn btn-warning">Edit Newspaper</a>
   </h1>
-  <p class="lead">{{ newspaper.content }}</p>
   <p><strong>Topic:</strong> <span class="badge bg-info">{{ newspaper.topic.name }}</span></p>
+  <p class="lead">{{ newspaper.content }}</p>
   <p class="text-muted"><strong>Published on:</strong>{{ newspaper.published_date }}</p>
   
   <h3>Publishers:</h3>
