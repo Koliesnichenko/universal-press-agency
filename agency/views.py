@@ -80,7 +80,7 @@ class NewspaperListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "newspaper_list"
     template_name = "agency/newspaper_list.html"
     paginate_by = 5
-    queryset = Newspaper.objects.select_related("topic")
+    queryset = Newspaper.objects.prefetch_related("topics")
 
     def get_context_data(self,*, object_list=None, **kwargs):
         context = super(NewspaperListView, self).get_context_data(**kwargs)
@@ -91,7 +91,7 @@ class NewspaperListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().prefetch_related("topics",)
         title = self.request.GET.get("title", "")
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -103,11 +103,23 @@ class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = NewspaperCreationForm
     success_url = reverse_lazy("agency:newspaper-list")
 
+    def form_valid(self, form):
+        newspaper = form.save(commit=False)
+        newspaper.save()
+        form.save_m2m()
+        return super().form_valid(form)
+
 
 class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Newspaper
     form_class = NewspaperUpdateForm
     success_url = reverse_lazy("agency:newspaper-list")
+
+    def form_valid(self, form):
+        newspaper = form.save(commit=False)
+        newspaper.save()
+        form.save_m2m()
+        return super().form_valid(form)
 
 
 class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):

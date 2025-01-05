@@ -6,8 +6,8 @@ from agency.models import Topic, Newspaper, Redactor
 
 @admin.register(Newspaper)
 class NewspaperAdmin(admin.ModelAdmin):
-    list_display = ["title", "topic", "content", "published_date", ]
-    list_filter = ["topic", ]
+    list_display = ["title", "content", "published_date", ]
+    list_filter = ["topics", ]
     search_fields = ["title", ]
 
 

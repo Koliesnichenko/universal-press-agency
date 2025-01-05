@@ -64,18 +64,24 @@ class BaseNewspaperForm(forms.ModelForm):
         required=False,
     )
 
+    topics = forms.ModelMultipleChoiceField(
+        queryset=Topic.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+    )
+
     class Meta:
         model = Newspaper
         fields = (
             "title",
             "content",
-            "topic",
+            "topics",
             "publishers",
         )
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "content": forms.Textarea(attrs={"class": "form-control"}),
-            "topic": forms.Select(attrs={"class": "form-control"}),
+            "topics": forms.CheckboxSelectMultiple(attrs={"class": "form-control"}),
         }
 
 
