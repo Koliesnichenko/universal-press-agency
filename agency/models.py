@@ -46,7 +46,7 @@ class Newspaper(models.Model):
         ordering = ("title", )
 
     def __str__(self):
-        return f"{self.topic}, {self.title}: {self.content} ({self.published_date})"
+        return f"{self.topics}, {self.title}: {self.content} ({self.published_date})"
 
     def preview_content(self):
         return " ".join(self.content.split()[:5]) + "..."
