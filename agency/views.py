@@ -80,7 +80,6 @@ class NewspaperListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "newspaper_list"
     template_name = "agency/newspaper_list.html"
     paginate_by = 5
-    queryset = Newspaper.objects.prefetch_related("topics")
 
     def get_context_data(self,*, object_list=None, **kwargs):
         context = super(NewspaperListView, self).get_context_data(**kwargs)
@@ -91,7 +90,7 @@ class NewspaperListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset().prefetch_related("topics",)
+        queryset = super().get_queryset().prefetch_related("topics", "publishers")
         title = self.request.GET.get("title", "")
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -130,6 +129,7 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
 class NewspaperDetailView(LoginRequiredMixin, generic.DetailView):
     model = Newspaper
     template_name = "agency/newspaper_detail.html"
+    queryset = Newspaper.objects.prefetch_related("publishers", "topics")
 
 
 class RedactorListView(LoginRequiredMixin, generic.ListView):
@@ -145,7 +145,7 @@ class RedactorListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().prefetch_related("newspapers__topics")
         username = self.request.GET.get("username", "")
         if username:
             queryset = queryset.filter(username__icontains=username)
@@ -179,7 +179,7 @@ def toggle_assign_to_newspaper(request, pk):
     redactor = Redactor.objects.get(id=request.user.id)
     newspaper = Newspaper.objects.get(id=pk)
 
-    if newspaper in redactor.newspapers.all():
+    if newspaper in redactor.newspapers.filter(id=newspaper.id).exists():
         redactor.newspapers.remove(newspaper)
     else:
         redactor.newspapers.add(newspaper)
