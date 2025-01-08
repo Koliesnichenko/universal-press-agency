@@ -19,6 +19,7 @@
       <td>Username</td>
       <td>First name</td>
       <td>Last name</td>
+      <td>Email</td>
       <td>Years of experience</td>
     </tr>
     {% for redactor in redactor_list %}
@@ -27,6 +28,7 @@
         <td><a href="{{ redactor.get_absolute_url }}">{{ redactor.username }} {% if user == redactor %} (Me){% endif %}</a></td>
         <td>{{ redactor.first_name }}</td>
         <td>{{ redactor.last_name }}</td>
+        <td>{{ redactor.email }}</td>
         <td>{{ redactor.years_of_experience }}</td>
       </tr>
     {% endfor %}
