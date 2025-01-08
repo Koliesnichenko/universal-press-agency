@@ -1,11 +1,5 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-
-from agency.models import (
-    Topic,
-    Newspaper,
-)
 
 TOPIC_LIST_VIEW_URL = reverse("agency:topic-list")
 TOPIC_CREATE_VIEW_URL = reverse("agency:topic-create")
