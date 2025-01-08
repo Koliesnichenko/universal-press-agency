@@ -327,3 +327,12 @@ class PrivateViewTest(TestCase):
         self.assertContains(response, redactor.username)
         self.assertContains(response, newspaper.title)
         self.assertTemplateUsed(response, "agency/redactor_detail.html")
+
+    def test_redactor_years_of_experience_update_view(self):
+        redactor = Redactor.objects.create(
+            username="markkoop",
+            years_of_experience=5,
+        )
+        redactor.years_of_experience = 2
+        redactor.save()
+        self.assertTrue(redactor.years_of_experience, 10)
