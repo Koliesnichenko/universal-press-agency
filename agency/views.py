@@ -179,7 +179,7 @@ def toggle_assign_to_newspaper(request, pk):
     redactor = Redactor.objects.get(id=request.user.id)
     newspaper = Newspaper.objects.get(id=pk)
 
-    if newspaper in redactor.newspapers.filter(id=newspaper.id).exists():
+    if redactor.newspapers.filter(id=newspaper.id).exists():
         redactor.newspapers.remove(newspaper)
     else:
         redactor.newspapers.add(newspaper)
