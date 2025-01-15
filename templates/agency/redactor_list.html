@@ -4,7 +4,7 @@
 {% block content %}
   <h1>
     Redactor List
-    <a href="{% url 'agency:redactor-create' %}" class="btn btn-primary link-to-page">
+    <a href="{% url 'agency:redactor-create' %}" class="btn btn-primary bg-gradient-dark link-to-page">
       Create
     </a>
   </h1>
@@ -13,7 +13,7 @@
       <input type="submit" class="btn btn-secondary" value="🔍">
   </form>
   {% if redactor_list %}
-    <table class="table">
+  <table class="table">
     <tr>
       <td>ID</td>
       <td>Username</td>
@@ -32,7 +32,6 @@
         <td>{{ redactor.years_of_experience }}</td>
       </tr>
     {% endfor %}
-    
-    </table>
+  </table>
   {% endif %}
 {% endblock %}
