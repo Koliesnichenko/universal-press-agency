@@ -1,10 +1,9 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views import generic
-
+from django.views import generic, View
+from django.views.generic import TemplateView
 
 from agency.forms import (
     RedactorCreationForm,
@@ -18,22 +17,20 @@ from agency.forms import (
 from agency.models import Newspaper, Redactor, Topic
 
 
-@login_required
-def index(request: HttpRequest) -> HttpResponse:
-    num_newspapers = Newspaper.objects.count()
-    num_redactors = Redactor.objects.count()
-    num_topics = Topic.objects.count()
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = "agency/index.html"
 
-    num_visits = request.session.get("num_visits", 0)
-    request.session["num_visits"] = num_visits + 1
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["num_newspapers"] = Newspaper.objects.count()
+        context["num_redactors"] = Redactor.objects.count()
+        context["num_topics"] = Topic.objects.count()
 
-    context = {
-        "num_newspapers": num_newspapers,
-        "num_redactors": num_redactors,
-        "num_topics": num_topics,
-        "num_visits": num_visits + 1,
-    }
-    return render(request, "agency/index.html", context=context)
+        num_visits = self.request.session.get("num_visits", 0)
+        self.request.session["num_visits"] = num_visits + 1
+        context["num_visits"] = num_visits + 1
+
+        return context
 
 
 class TopicListView(LoginRequiredMixin, generic.ListView):
@@ -174,14 +171,14 @@ class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("agency:redactor-list")
 
 
-@login_required
-def toggle_assign_to_newspaper(request, pk):
-    redactor = Redactor.objects.get(id=request.user.id)
-    newspaper = Newspaper.objects.get(id=pk)
+class ToggleAssignToNewspaperView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        redactor = get_object_or_404(Redactor, id=request.user.id)
+        newspaper = get_object_or_404(Newspaper, id=pk)
 
-    if redactor.newspapers.filter(id=newspaper.id).exists():
-        redactor.newspapers.remove(newspaper)
-    else:
-        redactor.newspapers.add(newspaper)
+        if redactor.newspapers.filter(id=newspaper.id).exists():
+            redactor.newspapers.remove(newspaper)
+        else:
+            redactor.newspapers.add(newspaper)
 
-    return HttpResponseRedirect(reverse_lazy("agency:newspaper-detail", kwargs={"pk": pk}))
+        return HttpResponseRedirect(reverse_lazy("agency:newspaper-detail", kwargs={"pk": pk}))

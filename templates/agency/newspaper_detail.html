@@ -30,11 +30,11 @@
   
   <div class="d-flex gap-2 mb-4">
     {% if user in newspaper.publishers.all %}
-      <a href="{% url 'agency:newspaper-toggle-assign' pk=newspaper.id %}" class="btn btn-danger link-to-page">
+      <a href="{% url 'agency:toggle-assign' pk=newspaper.id %}" class="btn btn-danger link-to-page">
         Delete me from this newspaper
       </a>
     {% else %}
-      <a href="{% url 'agency:newspaper-toggle-assign' pk=newspaper.id %}" class="btn btn-success link-to-page">
+      <a href="{% url 'agency:toggle-assign' pk=newspaper.id %}" class="btn btn-success link-to-page">
         Assign me to this newspaper
       </a>
     {% endif %}
