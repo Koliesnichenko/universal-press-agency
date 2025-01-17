@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="display-4">
+    {{ newspaper.title }}
+    <a href="{% url 'agency:newspaper-update' pk=newspaper.id %}" class="btn btn-warning">Edit Newspaper</a>
+  </h1>
+  <p><strong>Topics:</strong> 
+  {% for topic in newspaper.topics.all %}
+    <span class="badge bg-info">{{ topic.name }}</span>
+  {% empty %}
+    No topics assigned
+  {% endfor %}
+</p>
+  <p class="lead">{{ newspaper.content }}</p>
+  <p class="text-muted"><strong>Published on:</strong>{{ newspaper.published_date }}</p>
+  
+  <h3>Publishers:</h3>
+  <ul class="list-group mb-4">
+    {% for redactor in newspaper.publishers.all %}
+      <li class="list-group-item">
+        <a href="{% url 'agency:redactor-detail' pk=redactor.id %}">
+          {{ redactor.username }}
+        </a>
+      </li>
+      {% empty %}
+      <li class="list-group-item text-muted">No published assigned to this newspaper.</li>
+    {% endfor %}
+  </ul>
+  
+  <div class="d-flex gap-2 mb-4">
+    {% if user in newspaper.publishers.all %}
+      <a href="{% url 'agency:toggle-assign' pk=newspaper.id %}" class="btn btn-danger link-to-page">
+        Delete me from this newspaper
+      </a>
+    {% else %}
+      <a href="{% url 'agency:toggle-assign' pk=newspaper.id %}" class="btn btn-success link-to-page">
+        Assign me to this newspaper
+      </a>
+    {% endif %}
+    
+    <a href="{% url 'agency:newspaper-delete' pk=newspaper.id %}" class="btn btn-danger">Delete Newspaper</a>
+    <a href="{% url 'agency:newspaper-list' %}" class="btn btn-secondary">Back to List</a>
+  </div>
+{% endblock %}
